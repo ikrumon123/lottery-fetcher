@@ -1,0 +1,34 @@
+name: Lottery Sync Bot
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Runs every 5 mins
+  workflow_dispatch:      # Manual "Run" button
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Requests
+        run: pip install requests
+
+      - name: Run Sync
+        env:
+          LOTTERY_BASE_URL: ${{ secrets.LOTTERY_BASE_URL }}
+        run: python sync_lottery.py
+
+      - name: Save to Repo
+        run: |
+          git config --global user.name "LotteryBot"
+          git config --global user.email "bot@mhdtvmax.com"
+          git add results.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update Results" && git push)
