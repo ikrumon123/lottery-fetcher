@@ -1,5 +1,3 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-
 const API = "https://indialotteryapi.com/wp-json/klr/v1/latest";
 
 const SUPABASE_URL = "https://joicadepjbjvyuxlesdh.supabase.co";
@@ -7,7 +5,9 @@ const SUPABASE_KEY = "sb_publishable_LKpGsutdMhvgafj7P59txw_XhSZLTf3";
 
 async function run() {
   try {
-    const res = await fetch(API);
+    const res = await fetch(API, {
+      headers: { Accept: "application/json" }
+    });
 
     if (!res.ok) {
       console.log("API failed");
@@ -38,7 +38,10 @@ async function run() {
       })
     });
 
+    const result = await insert.text();
+    console.log("Response:", result);
     console.log("Inserted:", data.draw_code);
+
   } catch (err) {
     console.log("Error:", err.message);
   }
