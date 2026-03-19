@@ -5,7 +5,9 @@ const SUPABASE_KEY = "sb_publishable_LKpGsutdMhvgafj7P59txw_XhSZLTf3";
 
 async function run() {
   try {
-    const res = await fetch(API);
+    const res = await fetch(API, {
+      headers: { Accept: "application/json" }
+    });
 
     if (!res.ok) {
       console.log("API failed");
@@ -14,12 +16,24 @@ async function run() {
 
     const data = await res.json();
 
+    // 🔴 VALIDATION (CRITICAL)
     if (!data.draw_code) {
-      console.log("Invalid data");
+      console.log("Missing draw_code → skip");
       return;
     }
 
-    await fetch(`${SUPABASE_URL}/rest/v1/results`, {
+    if (!data.first || !data.first.ticket) {
+      console.log("Incomplete result → skip");
+      return;
+    }
+
+    if (!data.prizes || !data.prizes.amounts) {
+      console.log("Invalid prize data → skip");
+      return;
+    }
+
+    // ✅ Insert into Supabase
+    const insert = await fetch(`${SUPABASE_URL}/rest/v1/results`, {
       method: "POST",
       headers: {
         "apikey": SUPABASE_KEY,
@@ -36,7 +50,10 @@ async function run() {
       })
     });
 
+    const result = await insert.text();
+
     console.log("Inserted:", data.draw_code);
+    console.log("DB response:", result);
 
   } catch (err) {
     console.log("Error:", err.message);
