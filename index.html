@@ -1,71 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MHDTVMAX | Kerala Lottery Portal</title>
-    <style>
-        :root { --primary: #e63946; --dark: #1d3557; --success: #2d6a4f; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
-        .container { max-width: 1000px; margin: 0 auto; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MHDTVMAX | Kerala Lottery Portal</title>
 
-        /* Navigation Tabs */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: #f0f0f0; transition: 0.3s; color: var(--dark); }
-        .tab-btn.active { background: var(--primary); color: white; }
+<style>
+:root { --primary:#e63946; --dark:#1d3557; --success:#2d6a4f; --bg:#f0f2f5; }
+body { font-family:Segoe UI; background:var(--bg); margin:0; padding:10px; }
+.container { max-width:1000px; margin:auto; }
 
-        /* Content Sections */
-        .content-section { display: none; }
-        .content-section.active { display: block; }
+.tabs { display:flex; gap:10px; margin-bottom:20px; background:white; padding:10px; border-radius:12px; }
+.tab-btn { flex:1; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+.tab-btn.active { background:var(--primary); color:white; }
 
-        /* Result Header */
-        .result-header { background: white; padding: 25px; border-radius: 12px; border-bottom: 5px solid var(--primary); text-align: center; margin-bottom: 15px; position: relative; }
-        .live-tag { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+.content-section { display:none; }
+.content-section.active { display:block; }
 
-        /* Prize Table */
-        .prize-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        .prize-table th { background: var(--dark); color: white; padding: 15px; text-align: left; }
-        .prize-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: top; }
-        
-        /* Ticket Badges */
-        .ticket-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
-        .t-badge { background: #f8f9fa; border: 1px solid #ddd; padding: 4px 8px; border-radius: 5px; font-family: monospace; font-weight: bold; font-size: 0.9rem; }
-        .t-1st { background: #fff3f3; color: var(--primary); border-color: var(--primary); font-size: 1.1rem; }
+.loading { text-align:center; padding:50px; color:var(--primary); }
 
-        /* History List Style */
-        .history-card { background: white; padding: 18px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #eee; transition: 0.2s; }
-        .history-card:hover { border-color: var(--primary); background: #fffefe; transform: translateY(-2px); }
-        .h-date { font-weight: bold; color: var(--dark); font-size: 1.1rem; }
-        .h-name { color: #666; font-size: 0.9rem; margin-top: 4px; }
-        
-        .back-btn { width: 100%; padding: 15px; background: var(--dark); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-        .loading { text-align: center; padding: 50px; font-weight: bold; color: var(--primary); }
-    </style>
+.prize-table { width:100%; border-collapse:collapse; background:white; border-radius:12px; overflow:hidden; }
+.prize-table th { background:var(--dark); color:white; padding:12px; }
+.prize-table td { padding:10px; border-bottom:1px solid #eee; }
+
+.ticket-wrap { display:flex; flex-wrap:wrap; gap:5px; }
+.t-badge { padding:3px 6px; border:1px solid #ddd; border-radius:5px; font-family:monospace; }
+.t-1st { background:#fff3f3; color:var(--primary); }
+
+.history-card { background:white; padding:15px; margin-bottom:10px; cursor:pointer; }
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <div class="tabs">
-        <button id="btn-latest" class="tab-btn active" onclick="switchTab('latest')">LATEST RESULT</button>
-        <button id="btn-history" class="tab-btn" onclick="switchTab('history')">PREVIOUS RESULTS</button>
-    </div>
 
-    <div id="latest" class="content-section active">
-        <div id="latest-display">
-            <div class="loading">Loading Latest Result...</div>
-        </div>
-    </div>
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab('latest')">LATEST</button>
+<button class="tab-btn" onclick="switchTab('history')">HISTORY</button>
+</div>
 
-    <div id="history" class="content-section">
-        <div id="history-content">
-            <h3 style="margin: 0 0 15px 10px; color: var(--dark);">Old Results Archive</h3>
-            <div id="history-list">
-                <div class="loading">Loading History...</div>
-            </div>
-        </div>
-        <div id="history-detail" style="display:none;"></div>
-    </div>
+<div id="latest" class="content-section active">
+<div id="latest-display"><div class="loading">Loading...</div></div>
+</div>
+
+<div id="history" class="content-section">
+<div id="history-list"><div class="loading">Loading...</div></div>
+</div>
+
 </div>
 
 <script>
@@ -75,161 +57,128 @@ const HMAC_SECRET = "1234";
 const LATEST_API = "https://lottery-api.ikrupp.workers.dev/latest";
 const HISTORY_API = "https://lottery-api.ikrupp.workers.dev/history";
 
+let etagCache = {};
 let latestDrawDate = "";
 let historyItems = [];
 
-// 🔐 Generate HMAC signature
-async function generateSignature(secret, message) {
-    const enc = new TextEncoder();
+// 🔐 HMAC
+async function generateSignature(secret, message){
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw", enc.encode(secret),
+    { name:"HMAC", hash:"SHA-256" },
+    false, ["sign"]
+  );
 
-    const key = await crypto.subtle.importKey(
-        "raw",
-        enc.encode(secret),
-        { name: "HMAC", hash: "SHA-256" },
-        false,
-        ["sign"]
-    );
-
-    const sigBuffer = await crypto.subtle.sign("HMAC", key, enc.encode(message));
-    return btoa(String.fromCharCode(...new Uint8Array(sigBuffer)));
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
+  return btoa(String.fromCharCode(...new Uint8Array(sig)));
 }
 
-// 🔥 Secure fetch wrapper
-async function secureFetch(url) {
-    const timestamp = Date.now().toString();
-    const nonce = crypto.randomUUID();
+// 🔥 SECURE FETCH WITH 304 SUPPORT
+async function secureFetch(url){
+  const timestamp = Date.now().toString();
+  const nonce = crypto.randomUUID();
+  const body = "";
 
-    const body = ""; // GET request → empty body
+  const message = timestamp + nonce + body;
+  const signature = await generateSignature(HMAC_SECRET, message);
 
-    const message = timestamp + nonce + body;
-    const signature = await generateSignature(HMAC_SECRET, message);
+  const headers = {
+    "x-api-key": API_KEY,
+    "x-signature": signature,
+    "x-timestamp": timestamp,
+    "x-nonce": nonce
+  };
 
-    return fetch(url, {
-        method: "GET",
-        headers: {
-            "x-api-key": API_KEY,
-            "x-signature": signature,
-            "x-timestamp": timestamp,
-            "x-nonce": nonce
-        }
-    });
+  // send etag
+  if(etagCache[url]){
+    headers["If-None-Match"] = etagCache[url];
+  }
+
+  const res = await fetch(url, { headers });
+
+  // 304 handling
+  if(res.status === 304){
+    return JSON.parse(localStorage.getItem(url));
+  }
+
+  const etag = res.headers.get("ETag");
+  if(etag){
+    etagCache[url] = etag;
+  }
+
+  const data = await res.json();
+  localStorage.setItem(url, JSON.stringify(data));
+
+  return data;
 }
 
 // 🚀 INIT
-async function init() {
-    try {
-        // ✅ FIXED: use secureFetch
-        const latestRes = await secureFetch(LATEST_API);
-        const latestData = await latestRes.json();
+async function init(){
+  try{
+    const latest = await secureFetch(LATEST_API);
+    latestDrawDate = latest.draw_date;
+    renderLatest(latest);
 
-        latestDrawDate = latestData.draw_date;
-        renderLatest(latestData);
+    const history = await secureFetch(HISTORY_API);
+    historyItems = (history.items || []).filter(x=>x.draw_date!==latestDrawDate);
 
-        const historyRes = await secureFetch(HISTORY_API);
-        const historyJson = await historyRes.json();
+    renderHistory();
 
-        historyItems = (historyJson.items || []).filter(
-            item => item.draw_date !== latestDrawDate
-        );
-
-        renderHistoryList();
-
-    } catch (e) {
-        console.error("API Error:", e);
-        document.querySelectorAll('.loading')
-            .forEach(el => el.innerText = "Error connecting to server.");
-    }
+  }catch(e){
+    console.error(e);
+    document.querySelectorAll(".loading").forEach(x=>x.innerText="Error loading");
+  }
 }
 
-// 🔽 Everything below unchanged (your UI logic)
-
-function renderLatest(draw) {
-    document.getElementById('latest-display').innerHTML = buildResultHTML(draw, true);
+// UI
+function renderLatest(d){
+  document.getElementById("latest-display").innerHTML = build(d,true);
 }
 
-function buildResultHTML(draw, isLatest) {
-    const p = draw.prizes;
-    const categories = ["1st", "consolation", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
-    
-    const firstTicket = isLatest ? (draw.first ? draw.first.ticket : "") : draw.first_ticket;
-    
-    let rows = "";
-    categories.forEach(cat => {
-        let nums = (cat === "1st") ? [firstTicket] : (cat === "consolation" ? p.consolation : p[cat]) || [];
-        let numHtml = nums.length > 0 
-            ? `<div class="ticket-wrap">${nums.map(n => `<span class="t-badge ${cat==='1st'?'t-1st':''}">${n}</span>`).join('')}</div>`
-            : `<span style="color:#999; font-style:italic;">Processing...</span>`;
-
-        rows += `<tr>
-            <td style="font-weight:bold; width:140px;">${cat === 'consolation' ? 'CONSOLATION' : cat.toUpperCase() + ' PRIZE'}</td>
-            <td>${numHtml}</td>
-            <td style="font-weight:bold; color:var(--success); width:130px;">${p.amounts[cat] || '--'}</td>
-        </tr>`;
-    });
-
-    return `
-        <div class="result-header">
-            ${isLatest ? '<div class="live-tag">LATEST</div>' : ''}
-            <h1 style="margin:0; color:var(--primary)">${draw.draw_name}</h1>
-            <p style="margin:5px 0; font-weight:bold;">Date: ${draw.draw_date} | Draw: ${draw.draw_code}</p>
-            ${isLatest && draw.first && draw.first.location ? `<p style="margin:0; font-size:0.85rem; color:#666;">Prize Won in: ${draw.first.location}</p>` : ''}
-        </div>
-        <table class="prize-table">
-            <thead><tr><th>Prize Tier</th><th>Winning Numbers</th><th>Amount</th></tr></thead>
-            <tbody>${rows}</tbody>
-        </table>`;
+function renderHistory(){
+  const el = document.getElementById("history-list");
+  el.innerHTML = historyItems.map((d,i)=>`
+    <div class="history-card" onclick="showHistory(${i})">
+      ${d.draw_date} - ${d.draw_name}
+    </div>
+  `).join("");
 }
 
-function renderHistoryList() {
-    const list = document.getElementById('history-list');
-
-    if(historyItems.length === 0) {
-        list.innerHTML = "<div class='loading'>No previous results available.</div>";
-        return;
-    }
-
-    list.innerHTML = historyItems.map((draw, index) => `
-        <div class="history-card" onclick="showHistoryDetail(${index})">
-            <div>
-                <div class="h-date">${draw.draw_date}</div>
-                <div class="h-name">${draw.draw_name} (${draw.draw_code})</div>
-            </div>
-            <div style="font-weight:bold; color:var(--primary);">View Result</div>
-        </div>
-    `).join('');
+function showHistory(i){
+  document.getElementById("history-list").innerHTML = build(historyItems[i],false);
 }
 
-function showHistoryDetail(index) {
-    const detailDiv = document.getElementById('history-detail');
-    const contentDiv = document.getElementById('history-content');
-    
-    detailDiv.innerHTML = `
-        <button class="back-btn" onclick="closeHistoryDetail()">← BACK TO ARCHIVE</button>
-        ${buildResultHTML(historyItems[index], false)}
-    `;
-    
-    contentDiv.style.display = 'none';
-    detailDiv.style.display = 'block';
-    window.scrollTo({top: 0, behavior: 'smooth'});
+function build(draw,isLatest){
+  const p = draw.prizes;
+  const first = isLatest ? draw.first?.ticket : draw.first_ticket;
+
+  const cats=["1st","consolation","2nd","3rd","4th","5th","6th","7th","8th","9th"];
+
+  let rows="";
+  cats.forEach(c=>{
+    let nums = c==="1st" ? [first] : (c==="consolation"?p.consolation:p[c])||[];
+
+    rows+=`
+    <tr>
+      <td>${c}</td>
+      <td><div class="ticket-wrap">${nums.map(n=>`<span class="t-badge">${n}</span>`).join("")}</div></td>
+      <td>${p.amounts[c]||"--"}</td>
+    </tr>`;
+  });
+
+  return `
+  <h2>${draw.draw_name}</h2>
+  <p>${draw.draw_date}</p>
+  <table class="prize-table">
+    <thead><tr><th>Prize</th><th>Numbers</th><th>Amount</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
 }
 
-function closeHistoryDetail() {
-    document.getElementById('history-detail').style.display = 'none';
-    document.getElementById('history-content').style.display = 'block';
-}
-
-function switchTab(tabId) {
-    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    
-    document.getElementById(tabId).classList.add('active');
-    
-    if(tabId === 'latest') {
-        document.getElementById('btn-latest').classList.add('active');
-    } else {
-        document.getElementById('btn-history').classList.add('active');
-        closeHistoryDetail();
-    }
+function switchTab(id){
+  document.querySelectorAll(".content-section").forEach(x=>x.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
 init();
