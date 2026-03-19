@@ -5,9 +5,7 @@ const SUPABASE_KEY = "sb_publishable_LKpGsutdMhvgafj7P59txw_XhSZLTf3";
 
 async function run() {
   try {
-    const res = await fetch(API, {
-      headers: { Accept: "application/json" }
-    });
+    const res = await fetch(API);
 
     if (!res.ok) {
       console.log("API failed");
@@ -21,7 +19,7 @@ async function run() {
       return;
     }
 
-    const insert = await fetch(`${SUPABASE_URL}/rest/v1/results`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/results`, {
       method: "POST",
       headers: {
         "apikey": SUPABASE_KEY,
@@ -38,8 +36,6 @@ async function run() {
       })
     });
 
-    const result = await insert.text();
-    console.log("Response:", result);
     console.log("Inserted:", data.draw_code);
 
   } catch (err) {
