@@ -1,7 +1,6 @@
 const SUPABASE_URL = "https://joicadepjbjvyuxlesdh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_LKpGsutdMhvgafj7P59txw_XhSZLTf3";
 
-// 🔹 API endpoints
 const LATEST_API = "https://indialotteryapi.com/wp-json/klr/v1/latest";
 const HISTORY_API = "https://indialotteryapi.com/wp-json/klr/v1/history?limit=10";
 
@@ -20,7 +19,6 @@ async function insertRow(data) {
       draw_code: data.draw_code,
       draw_date: data.draw_date,
       draw_name: data.draw_name,
-      first_ticket: data.first_ticket || data.first?.ticket || "",
       full_data: data
     })
   });
@@ -47,7 +45,7 @@ async function run() {
   try {
     const count = await getCount();
 
-    // 🔴 FIRST RUN → fill history
+    // 🔴 FIRST RUN → fill history (NO VALIDATION HERE)
     if (count === 0) {
       console.log("Filling history...");
 
@@ -62,13 +60,12 @@ async function run() {
       return;
     }
 
-    // 🔴 NORMAL RUN → latest only
+    // 🔴 NORMAL RUN → latest (WITH VALIDATION)
     const res = await fetch(LATEST_API);
     const data = await res.json();
 
-    // skip incomplete results
     if (!data.first || !data.first.ticket) {
-      console.log("Incomplete result → skip");
+      console.log("Latest not ready → skip");
       return;
     }
 
