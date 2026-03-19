@@ -69,125 +69,170 @@
 </div>
 
 <script>
-    const LATEST_API = "https://lottery-api.ikrupp.workers.dev/latest";
-    const HISTORY_API = "https://lottery-api.ikrupp.workers.dev/history";
+const API_KEY = "1234";
+const HMAC_SECRET = "1234";
+
+const LATEST_API = "https://lottery-api.ikrupp.workers.dev/latest";
+const HISTORY_API = "https://lottery-api.ikrupp.workers.dev/history";
+
+let latestDrawDate = "";
+let historyItems = [];
+
+// 🔐 Generate HMAC signature
+async function generateSignature(secret, message) {
+    const enc = new TextEncoder();
+
+    const key = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(secret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
+
+    const sigBuffer = await crypto.subtle.sign("HMAC", key, enc.encode(message));
+    return btoa(String.fromCharCode(...new Uint8Array(sigBuffer)));
+}
+
+// 🔥 Secure fetch wrapper
+async function secureFetch(url) {
+    const timestamp = Date.now().toString();
+    const nonce = crypto.randomUUID();
+
+    const body = ""; // GET request → empty body
+
+    const message = timestamp + nonce + body;
+    const signature = await generateSignature(HMAC_SECRET, message);
+
+    return fetch(url, {
+        method: "GET",
+        headers: {
+            "x-api-key": API_KEY,
+            "x-signature": signature,
+            "x-timestamp": timestamp,
+            "x-nonce": nonce
+        }
+    });
+}
+
+// 🚀 INIT
+async function init() {
+    try {
+        // ✅ FIXED: use secureFetch
+        const latestRes = await secureFetch(LATEST_API);
+        const latestData = await latestRes.json();
+
+        latestDrawDate = latestData.draw_date;
+        renderLatest(latestData);
+
+        const historyRes = await secureFetch(HISTORY_API);
+        const historyJson = await historyRes.json();
+
+        historyItems = (historyJson.items || []).filter(
+            item => item.draw_date !== latestDrawDate
+        );
+
+        renderHistoryList();
+
+    } catch (e) {
+        console.error("API Error:", e);
+        document.querySelectorAll('.loading')
+            .forEach(el => el.innerText = "Error connecting to server.");
+    }
+}
+
+// 🔽 Everything below unchanged (your UI logic)
+
+function renderLatest(draw) {
+    document.getElementById('latest-display').innerHTML = buildResultHTML(draw, true);
+}
+
+function buildResultHTML(draw, isLatest) {
+    const p = draw.prizes;
+    const categories = ["1st", "consolation", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
     
-    let latestDrawDate = "";
-    let historyItems = [];
+    const firstTicket = isLatest ? (draw.first ? draw.first.ticket : "") : draw.first_ticket;
+    
+    let rows = "";
+    categories.forEach(cat => {
+        let nums = (cat === "1st") ? [firstTicket] : (cat === "consolation" ? p.consolation : p[cat]) || [];
+        let numHtml = nums.length > 0 
+            ? `<div class="ticket-wrap">${nums.map(n => `<span class="t-badge ${cat==='1st'?'t-1st':''}">${n}</span>`).join('')}</div>`
+            : `<span style="color:#999; font-style:italic;">Processing...</span>`;
 
-    async function init() {
-        try {
-            // 1. Fetch Latest Result
-            const latestRes = await fetch(LATEST_API);
-            const latestData = await latestRes.json();
-            latestDrawDate = latestData.draw_date;
-            renderLatest(latestData);
-            
-            // 2. Fetch History List
-            const historyRes = await fetch(HISTORY_API);
-            const historyJson = await historyRes.json();
-            
-            // Filter out today's result so it doesn't duplicate in the history tab
-            historyItems = historyJson.items.filter(item => item.draw_date !== latestDrawDate);
-            
-            renderHistoryList();
-        } catch (e) {
-            console.error("API Error:", e);
-            document.querySelectorAll('.loading').forEach(el => el.innerText = "Error connecting to server.");
-        }
+        rows += `<tr>
+            <td style="font-weight:bold; width:140px;">${cat === 'consolation' ? 'CONSOLATION' : cat.toUpperCase() + ' PRIZE'}</td>
+            <td>${numHtml}</td>
+            <td style="font-weight:bold; color:var(--success); width:130px;">${p.amounts[cat] || '--'}</td>
+        </tr>`;
+    });
+
+    return `
+        <div class="result-header">
+            ${isLatest ? '<div class="live-tag">LATEST</div>' : ''}
+            <h1 style="margin:0; color:var(--primary)">${draw.draw_name}</h1>
+            <p style="margin:5px 0; font-weight:bold;">Date: ${draw.draw_date} | Draw: ${draw.draw_code}</p>
+            ${isLatest && draw.first && draw.first.location ? `<p style="margin:0; font-size:0.85rem; color:#666;">Prize Won in: ${draw.first.location}</p>` : ''}
+        </div>
+        <table class="prize-table">
+            <thead><tr><th>Prize Tier</th><th>Winning Numbers</th><th>Amount</th></tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+}
+
+function renderHistoryList() {
+    const list = document.getElementById('history-list');
+
+    if(historyItems.length === 0) {
+        list.innerHTML = "<div class='loading'>No previous results available.</div>";
+        return;
     }
 
-    function renderLatest(draw) {
-        document.getElementById('latest-display').innerHTML = buildResultHTML(draw, true);
-    }
-
-    function buildResultHTML(draw, isLatest) {
-        const p = draw.prizes;
-        const categories = ["1st", "consolation", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
-        
-        // Handle field naming differences between latest and history endpoints
-        const firstTicket = isLatest ? (draw.first ? draw.first.ticket : "") : draw.first_ticket;
-        
-        let rows = "";
-        categories.forEach(cat => {
-            let nums = (cat === "1st") ? [firstTicket] : (cat === "consolation" ? p.consolation : p[cat]) || [];
-            let numHtml = nums.length > 0 
-                ? `<div class="ticket-wrap">${nums.map(n => `<span class="t-badge ${cat==='1st'?'t-1st':''}">${n}</span>`).join('')}</div>`
-                : `<span style="color:#999; font-style:italic;">Processing...</span>`;
-
-            rows += `<tr>
-                <td style="font-weight:bold; width:140px;">${cat === 'consolation' ? 'CONSOLATION' : cat.toUpperCase() + ' PRIZE'}</td>
-                <td>${numHtml}</td>
-                <td style="font-weight:bold; color:var(--success); width:130px;">${p.amounts[cat] || '--'}</td>
-            </tr>`;
-        });
-
-        return `
-            <div class="result-header">
-                ${isLatest ? '<div class="live-tag">LATEST</div>' : ''}
-                <h1 style="margin:0; color:var(--primary)">${draw.draw_name}</h1>
-                <p style="margin:5px 0; font-weight:bold;">Date: ${draw.draw_date} | Draw: ${draw.draw_code}</p>
-                ${isLatest && draw.first && draw.first.location ? `<p style="margin:0; font-size:0.85rem; color:#666;">Prize Won in: ${draw.first.location}</p>` : ''}
+    list.innerHTML = historyItems.map((draw, index) => `
+        <div class="history-card" onclick="showHistoryDetail(${index})">
+            <div>
+                <div class="h-date">${draw.draw_date}</div>
+                <div class="h-name">${draw.draw_name} (${draw.draw_code})</div>
             </div>
-            <table class="prize-table">
-                <thead><tr><th>Prize Tier</th><th>Winning Numbers</th><th>Amount</th></tr></thead>
-                <tbody>${rows}</tbody>
-            </table>`;
+            <div style="font-weight:bold; color:var(--primary);">View Result</div>
+        </div>
+    `).join('');
+}
+
+function showHistoryDetail(index) {
+    const detailDiv = document.getElementById('history-detail');
+    const contentDiv = document.getElementById('history-content');
+    
+    detailDiv.innerHTML = `
+        <button class="back-btn" onclick="closeHistoryDetail()">← BACK TO ARCHIVE</button>
+        ${buildResultHTML(historyItems[index], false)}
+    `;
+    
+    contentDiv.style.display = 'none';
+    detailDiv.style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function closeHistoryDetail() {
+    document.getElementById('history-detail').style.display = 'none';
+    document.getElementById('history-content').style.display = 'block';
+}
+
+function switchTab(tabId) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    
+    if(tabId === 'latest') {
+        document.getElementById('btn-latest').classList.add('active');
+    } else {
+        document.getElementById('btn-history').classList.add('active');
+        closeHistoryDetail();
     }
+}
 
-    function renderHistoryList() {
-        const list = document.getElementById('history-list');
-
-        if(historyItems.length === 0) {
-            list.innerHTML = "<div class='loading'>No previous results available.</div>";
-            return;
-        }
-
-        list.innerHTML = historyItems.map((draw, index) => `
-            <div class="history-card" onclick="showHistoryDetail(${index})">
-                <div>
-                    <div class="h-date">${draw.draw_date}</div>
-                    <div class="h-name">${draw.draw_name} (${draw.draw_code})</div>
-                </div>
-                <div style="font-weight:bold; color:var(--primary);">View Result</div>
-            </div>
-        `).join('');
-    }
-
-    function showHistoryDetail(index) {
-        const detailDiv = document.getElementById('history-detail');
-        const contentDiv = document.getElementById('history-content');
-        
-        detailDiv.innerHTML = `
-            <button class="back-btn" onclick="closeHistoryDetail()">← BACK TO ARCHIVE</button>
-            ${buildResultHTML(historyItems[index], false)}
-        `;
-        
-        contentDiv.style.display = 'none';
-        detailDiv.style.display = 'block';
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    function closeHistoryDetail() {
-        document.getElementById('history-detail').style.display = 'none';
-        document.getElementById('history-content').style.display = 'block';
-    }
-
-    function switchTab(tabId) {
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        
-        document.getElementById(tabId).classList.add('active');
-        
-        if(tabId === 'latest') {
-            document.getElementById('btn-latest').classList.add('active');
-        } else {
-            document.getElementById('btn-history').classList.add('active');
-            closeHistoryDetail(); // Ensure list is shown when clicking history tab
-        }
-    }
-
-    init();
+init();
 </script>
 
 </body>
