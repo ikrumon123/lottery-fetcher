@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const API = "https://indialotteryapi.com/wp-json/klr/v1/latest";
 
