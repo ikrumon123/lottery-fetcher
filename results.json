@@ -4,15 +4,19 @@
     "draw_name": "Karunya",
     "draw_code": "KR-747",
     "first": {
-      "ticket": "",
+      "ticket": "KT 889280",
       "location": "",
       "agent": "",
       "agency_no": ""
     },
     "prizes": {
       "consolation": [],
-      "2nd": [],
-      "3rd": [],
+      "2nd": [
+        "KR 204035"
+      ],
+      "3rd": [
+        "KS 201877"
+      ],
       "4th": [],
       "5th": [],
       "6th": [],
