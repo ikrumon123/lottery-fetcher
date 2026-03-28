@@ -4,15 +4,36 @@
     "draw_name": "SUMMER BUMPER",
     "draw_code": "BR-108",
     "first": {
-      "ticket": "",
-      "location": "",
-      "agent": "",
-      "agency_no": ""
+      "ticket": "SB 517026",
+      "location": "PALAKKAD",
+      "agent": "MADHUSSODHANAN S",
+      "agency_no": "P 4289"
     },
     "prizes": {
-      "consolation": [],
-      "2nd": [],
-      "3rd": [],
+      "consolation": [
+        "SA 517026",
+        "SC 517026",
+        "SD 517026",
+        "SE 517026",
+        "SG 517026"
+      ],
+      "2nd": [
+        "SE 660573"
+      ],
+      "3rd": [
+        "SA 142382",
+        "SA 296152",
+        "SB 431602",
+        "SB 524318",
+        "SC 137259",
+        "SC 541650",
+        "SD 287445",
+        "SD 734008",
+        "SE 558483",
+        "SE 586727",
+        "SG 215482",
+        "SG 780768"
+      ],
       "4th": [],
       "5th": [],
       "6th": [],
@@ -51,9 +72,14 @@
         "41",
         "30",
         "95"
+      ],
+      "mc": [
+        "564268"
       ]
     },
-    "mc": []
+    "mc": [
+      "564268"
+    ]
   },
   {
     "draw_date": "2026-03-27",
