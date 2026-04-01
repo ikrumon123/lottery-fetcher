@@ -4,15 +4,19 @@
     "draw_name": "Dhanalekshmi",
     "draw_code": "DL-46",
     "first": {
-      "ticket": "",
+      "ticket": "DZ 246443",
       "location": "",
       "agent": "",
       "agency_no": ""
     },
     "prizes": {
       "consolation": [],
-      "2nd": [],
-      "3rd": [],
+      "2nd": [
+        "DU 885082"
+      ],
+      "3rd": [
+        "DY 167122"
+      ],
       "4th": [],
       "5th": [],
       "6th": [],
@@ -52,9 +56,14 @@
         "89",
         "94",
         "03\u200c"
+      ],
+      "mc": [
+        "653864"
       ]
     },
-    "mc": []
+    "mc": [
+      "653864"
+    ]
   },
   {
     "draw_date": "2026-03-31",
