@@ -4,15 +4,19 @@
     "draw_name": "Samrudhi",
     "draw_code": "SM-53",
     "first": {
-      "ticket": "",
+      "ticket": "ML 501536",
       "location": "",
       "agent": "",
       "agency_no": ""
     },
     "prizes": {
       "consolation": [],
-      "2nd": [],
-      "3rd": [],
+      "2nd": [
+        "ME 274958"
+      ],
+      "3rd": [
+        "MB 495517"
+      ],
       "4th": [],
       "5th": [],
       "6th": [],
@@ -52,9 +56,14 @@
         "74",
         "50",
         "86"
+      ],
+      "mc": [
+        "123568"
       ]
     },
-    "mc": []
+    "mc": [
+      "123568"
+    ]
   },
   {
     "draw_date": "2026-05-02",
