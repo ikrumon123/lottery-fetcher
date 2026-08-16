@@ -4,15 +4,31 @@
     "draw_name": "SAMRUDHI",
     "draw_code": "SM-68",
     "first": {
-      "ticket": "",
+      "ticket": "MP 246836",
       "location": "",
       "agent": "",
       "agency_no": ""
     },
     "prizes": {
-      "consolation": [],
-      "2nd": [],
-      "3rd": [],
+      "consolation": [
+        "MN 246836",
+        "MO 246836",
+        "MR 246836",
+        "MS 246836",
+        "MT 246836",
+        "MU 246836",
+        "MV 246836",
+        "MW 246836",
+        "MX 246836",
+        "MY 246836",
+        "MZ 246836"
+      ],
+      "2nd": [
+        "MS 559332"
+      ],
+      "3rd": [
+        "MU 687040"
+      ],
       "4th": [],
       "5th": [],
       "6th": [],
