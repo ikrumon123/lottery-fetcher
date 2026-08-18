@@ -4,15 +4,31 @@
     "draw_name": "STHREE SAKTHI",
     "draw_code": "SS-533",
     "first": {
-      "ticket": "",
+      "ticket": "SR 968860",
       "location": "",
       "agent": "",
       "agency_no": ""
     },
     "prizes": {
-      "consolation": [],
-      "2nd": [],
-      "3rd": [],
+      "consolation": [
+        "SN 968860",
+        "SO 968860",
+        "SP 968860",
+        "SS 968860",
+        "ST 968860",
+        "SU 968860",
+        "SV 968860",
+        "SW 968860",
+        "SX 968860",
+        "SY 968860",
+        "SZ 968860"
+      ],
+      "2nd": [
+        "SS 216008"
+      ],
+      "3rd": [
+        "SX 448302"
+      ],
       "4th": [],
       "5th": [],
       "6th": [],
